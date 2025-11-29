@@ -25,6 +25,10 @@ export default function SystemSettingsSection({ language }) {
 
   const [activeTab, setActiveTab] = useState('general')
 
+  const handleSaveSettings = () => {
+    alert(language === 'ar' ? 'تم حفظ الإعدادات بنجاح!' : 'Settings saved successfully!')
+  }
+
   return (
     <div>
       <div className="mb-6">
@@ -322,7 +326,10 @@ export default function SystemSettingsSection({ language }) {
           <button className="px-8 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 font-semibold">
             {language === 'ar' ? 'إلغاء' : 'Cancel'}
           </button>
-          <button className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold flex items-center gap-2">
+          <button 
+            onClick={handleSaveSettings}
+            className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold flex items-center gap-2"
+          >
             <i className="fas fa-save"></i>
             {language === 'ar' ? 'حفظ التغييرات' : 'Save Changes'}
           </button>
