@@ -78,6 +78,25 @@ export default function FloorsSection({ language }) {
     setFormData({ number: '', nameAr: '', nameEn: '', rooms: '' })
   }
 
+  const handleAddFloor = () => {
+    if (!formData.number || !formData.nameAr || !formData.nameEn || !formData.rooms) {
+      alert(language === 'ar' ? 'الرجاء ملء جميع الحقول' : 'Please fill all fields')
+      return
+    }
+
+    const newFloor = {
+      id: floors.length > 0 ? Math.max(...floors.map(f => f.id)) + 1 : 1,
+      number: parseInt(formData.number),
+      nameAr: formData.nameAr,
+      nameEn: formData.nameEn,
+      rooms: parseInt(formData.rooms)
+    }
+
+    setFloors([...floors, newFloor])
+    setShowAddModal(false)
+    setFormData({ number: '', nameAr: '', nameEn: '', rooms: '' })
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -140,16 +159,70 @@ export default function FloorsSection({ language }) {
               {language === 'ar' ? 'إضافة طابق جديد' : 'Add New Floor'}
             </h3>
             <div className="space-y-4">
-              <input type="number" placeholder={language === 'ar' ? 'رقم الطابق' : 'Floor Number'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'اسم الطابق (عربي)' : 'Floor Name (Arabic)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'اسم الطابق (إنجليزي)' : 'Floor Name (English)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="number" placeholder={language === 'ar' ? 'عدد الغرف' : 'Number of Rooms'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'رقم الطابق' : 'Floor Number'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.number}
+                  onChange={(e) => setFormData({...formData, number: e.target.value})}
+                  placeholder={language === 'ar' ? 'رقم الطابق' : 'Floor Number'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم الطابق (عربي)' : 'Floor Name (Arabic)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameAr}
+                  onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم الطابق (عربي)' : 'Floor Name (Arabic)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم الطابق (إنجليزي)' : 'Floor Name (English)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameEn}
+                  onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم الطابق (إنجليزي)' : 'Floor Name (English)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'عدد الغرف' : 'Number of Rooms'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.rooms}
+                  onChange={(e) => setFormData({...formData, rooms: e.target.value})}
+                  placeholder={language === 'ar' ? 'عدد الغرف' : 'Number of Rooms'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-green-500" 
+                />
+              </div>
             </div>
             <div className="flex justify-end gap-3 mt-6">
-              <button onClick={() => setShowAddModal(false)} className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
+              <button 
+                onClick={() => {
+                  setShowAddModal(false)
+                  setFormData({ number: '', nameAr: '', nameEn: '', rooms: '' })
+                }} 
+                className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              >
                 {language === 'ar' ? 'إلغاء' : 'Cancel'}
               </button>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
+              <button 
+                onClick={handleAddFloor}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              >
+                <i className="fas fa-save"></i>
                 {language === 'ar' ? 'حفظ' : 'Save'}
               </button>
             </div>
