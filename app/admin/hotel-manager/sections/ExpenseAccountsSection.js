@@ -109,6 +109,26 @@ export default function ExpenseAccountsSection({ language }) {
     setFormData({ nameAr: '', nameEn: '', code: '', category: 'personnel', totalSpent: 0 })
   }
 
+  const handleAddAccount = () => {
+    if (!formData.nameAr || !formData.nameEn || !formData.code || !formData.category) {
+      alert(language === 'ar' ? 'الرجاء ملء جميع الحقول' : 'Please fill all fields')
+      return
+    }
+
+    const newAccount = {
+      id: Math.max(...accounts.map(a => a.id)) + 1,
+      nameAr: formData.nameAr,
+      nameEn: formData.nameEn,
+      code: formData.code,
+      category: formData.category,
+      totalSpent: 0
+    }
+
+    setAccounts([...accounts, newAccount])
+    setShowAddModal(false)
+    setFormData({ nameAr: '', nameEn: '', code: '', category: 'personnel', totalSpent: 0 })
+  }
+
   const getCategoryColor = (category) => {
     switch(category) {
       case 'personnel': return 'from-blue-500 to-indigo-500'
@@ -202,24 +222,64 @@ export default function ExpenseAccountsSection({ language }) {
               {language === 'ar' ? 'إضافة حساب مصروفات' : 'Add Expense Account'}
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <input type="text" placeholder={language === 'ar' ? 'اسم الحساب (عربي)' : 'Account Name (Arabic)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'اسم الحساب (إنجليزي)' : 'Account Name (English)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'رمز الحساب' : 'Account Code'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <select className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white">
-                <option>{language === 'ar' ? 'الفئة' : 'Category'}</option>
-                <option value="personnel">{language === 'ar' ? 'الموظفين' : 'Personnel'}</option>
-                <option value="utilities">{language === 'ar' ? 'المرافق' : 'Utilities'}</option>
-                <option value="maintenance">{language === 'ar' ? 'الصيانة' : 'Maintenance'}</option>
-                <option value="supplies">{language === 'ar' ? 'المستلزمات' : 'Supplies'}</option>
-                <option value="marketing">{language === 'ar' ? 'التسويق' : 'Marketing'}</option>
-              </select>
-              <textarea placeholder={language === 'ar' ? 'الوصف' : 'Description'} rows="3" className="col-span-2 w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم الحساب (عربي)' : 'Account Name (Arabic)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameAr}
+                  onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم الحساب (عربي)' : 'Account Name (Arabic)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم الحساب (إنجليزي)' : 'Account Name (English)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameEn}
+                  onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم الحساب (إنجليزي)' : 'Account Name (English)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'رمز الحساب' : 'Account Code'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.code}
+                  onChange={(e) => setFormData({...formData, code: e.target.value})}
+                  placeholder={language === 'ar' ? 'رمز الحساب' : 'Account Code'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الفئة' : 'Category'}
+                </label>
+                <select 
+                  value={formData.category}
+                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="personnel">{language === 'ar' ? 'الموظفين' : 'Personnel'}</option>
+                  <option value="utilities">{language === 'ar' ? 'المرافق' : 'Utilities'}</option>
+                  <option value="maintenance">{language === 'ar' ? 'الصيانة' : 'Maintenance'}</option>
+                  <option value="supplies">{language === 'ar' ? 'المستلزمات' : 'Supplies'}</option>
+                  <option value="marketing">{language === 'ar' ? 'التسويق' : 'Marketing'}</option>
+                </select>
+              </div>
             </div>
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setShowAddModal(false)} className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
                 {language === 'ar' ? 'إلغاء' : 'Cancel'}
               </button>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
+              <button onClick={handleAddAccount} className="px-6 py-3 bg-blue-600 text-white rounded-lg">
                 {language === 'ar' ? 'حفظ' : 'Save'}
               </button>
             </div>
