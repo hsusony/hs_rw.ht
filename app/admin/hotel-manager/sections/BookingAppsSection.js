@@ -96,6 +96,29 @@ export default function BookingAppsSection({ language }) {
     setFormData({ nameAr: '', nameEn: '', logo: '🏫', commissionPercent: '', apiKey: '', status: 'active', totalBookings: 0, monthlyFee: 0 })
   }
 
+  const handleAddApp = () => {
+    if (!formData.nameAr || !formData.nameEn || formData.commissionPercent === '' || formData.monthlyFee === '') {
+      alert(language === 'ar' ? 'الرجاء ملء جميع الحقول' : 'Please fill all fields')
+      return
+    }
+
+    const newApp = {
+      id: Math.max(...apps.map(a => a.id)) + 1,
+      nameAr: formData.nameAr,
+      nameEn: formData.nameEn,
+      logo: formData.logo,
+      commissionPercent: parseFloat(formData.commissionPercent),
+      apiKey: formData.apiKey,
+      status: formData.status,
+      totalBookings: 0,
+      monthlyFee: parseInt(formData.monthlyFee)
+    }
+
+    setApps([...apps, newApp])
+    setShowAddModal(false)
+    setFormData({ nameAr: '', nameEn: '', logo: '🏫', commissionPercent: '', apiKey: '', status: 'active', totalBookings: 0, monthlyFee: 0 })
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -191,18 +214,73 @@ export default function BookingAppsSection({ language }) {
               {language === 'ar' ? 'إضافة تطبيق حجز' : 'Add Booking App'}
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <input type="text" placeholder={language === 'ar' ? 'اسم التطبيق (عربي)' : 'App Name (Arabic)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'اسم التطبيق (إنجليزي)' : 'App Name (English)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="number" step="0.1" placeholder={language === 'ar' ? 'نسبة العمولة %' : 'Commission %'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="number" placeholder={language === 'ar' ? 'الاشتراك الشهري' : 'Monthly Fee'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'مفتاح API' : 'API Key'} className="col-span-2 w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="url" placeholder={language === 'ar' ? 'رابط API' : 'API URL'} className="col-span-2 w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم التطبيق (عربي)' : 'App Name (Arabic)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameAr}
+                  onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم التطبيق (عربي)' : 'App Name (Arabic)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم التطبيق (إنجليزي)' : 'App Name (English)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameEn}
+                  onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم التطبيق (إنجليزي)' : 'App Name (English)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'نسبة العمولة %' : 'Commission %'}
+                </label>
+                <input 
+                  type="number" 
+                  step="0.1" 
+                  value={formData.commissionPercent}
+                  onChange={(e) => setFormData({...formData, commissionPercent: e.target.value})}
+                  placeholder={language === 'ar' ? 'نسبة العمولة %' : 'Commission %'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الاشتراك الشهري' : 'Monthly Fee'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.monthlyFee}
+                  onChange={(e) => setFormData({...formData, monthlyFee: e.target.value})}
+                  placeholder={language === 'ar' ? 'الاشتراك الشهري' : 'Monthly Fee'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'مفتاح API' : 'API Key'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.apiKey}
+                  onChange={(e) => setFormData({...formData, apiKey: e.target.value})}
+                  placeholder={language === 'ar' ? 'مفتاح API (اختياري)' : 'API Key (optional)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
             </div>
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setShowAddModal(false)} className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
                 {language === 'ar' ? 'إلغاء' : 'Cancel'}
               </button>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
+              <button onClick={handleAddApp} className="px-6 py-3 bg-blue-600 text-white rounded-lg">
                 {language === 'ar' ? 'حفظ' : 'Save'}
               </button>
             </div>
