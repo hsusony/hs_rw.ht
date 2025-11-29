@@ -93,6 +93,26 @@ export default function PaymentMethodsSection({ language }) {
     setFormData({ nameAr: '', nameEn: '', icon: 'fa-money-bill-wave', feePercent: '', active: true })
   }
 
+  const handleAddMethod = () => {
+    if (!formData.nameAr || !formData.nameEn || !formData.icon || formData.feePercent === '') {
+      alert(language === 'ar' ? 'الرجاء ملء جميع الحقول' : 'Please fill all fields')
+      return
+    }
+
+    const newMethod = {
+      id: Math.max(...methods.map(m => m.id)) + 1,
+      nameAr: formData.nameAr,
+      nameEn: formData.nameEn,
+      icon: formData.icon,
+      feePercent: parseFloat(formData.feePercent),
+      active: formData.active
+    }
+
+    setMethods([...methods, newMethod])
+    setShowAddModal(false)
+    setFormData({ nameAr: '', nameEn: '', icon: 'fa-money-bill-wave', feePercent: '', active: true })
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -165,22 +185,65 @@ export default function PaymentMethodsSection({ language }) {
               {language === 'ar' ? 'إضافة وسيلة دفع' : 'Add Payment Method'}
             </h3>
             <div className="space-y-4">
-              <input type="text" placeholder={language === 'ar' ? 'الاسم (عربي)' : 'Name (Arabic)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'الاسم (إنجليزي)' : 'Name (English)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="number" step="0.1" placeholder={language === 'ar' ? 'نسبة الرسوم %' : 'Fee Percentage %'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <select className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white">
-                <option>{language === 'ar' ? 'اختر الأيقونة' : 'Select Icon'}</option>
-                <option value="fa-money-bill-wave">{language === 'ar' ? 'نقدي' : 'Cash'}</option>
-                <option value="fa-credit-card">{language === 'ar' ? 'بطاقة' : 'Card'}</option>
-                <option value="fa-university">{language === 'ar' ? 'بنك' : 'Bank'}</option>
-                <option value="fa-wallet">{language === 'ar' ? 'محفظة' : 'Wallet'}</option>
-              </select>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الاسم (عربي)' : 'Name (Arabic)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameAr}
+                  onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                  placeholder={language === 'ar' ? 'الاسم (عربي)' : 'Name (Arabic)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الاسم (إنجليزي)' : 'Name (English)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameEn}
+                  onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                  placeholder={language === 'ar' ? 'الاسم (إنجليزي)' : 'Name (English)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'نسبة الرسوم %' : 'Fee Percentage %'}
+                </label>
+                <input 
+                  type="number" 
+                  step="0.1" 
+                  value={formData.feePercent}
+                  onChange={(e) => setFormData({...formData, feePercent: e.target.value})}
+                  placeholder={language === 'ar' ? 'نسبة الرسوم %' : 'Fee Percentage %'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الأيقونة' : 'Icon'}
+                </label>
+                <select 
+                  value={formData.icon}
+                  onChange={(e) => setFormData({...formData, icon: e.target.value})}
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="">{language === 'ar' ? 'اختر الأيقونة' : 'Select Icon'}</option>
+                  <option value="fa-money-bill-wave">{language === 'ar' ? 'نقدي' : 'Cash'}</option>
+                  <option value="fa-credit-card">{language === 'ar' ? 'بطاقة' : 'Card'}</option>
+                  <option value="fa-university">{language === 'ar' ? 'بنك' : 'Bank'}</option>
+                  <option value="fa-wallet">{language === 'ar' ? 'محفظة' : 'Wallet'}</option>
+                </select>
+              </div>
             </div>
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setShowAddModal(false)} className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
                 {language === 'ar' ? 'إلغاء' : 'Cancel'}
               </button>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
+              <button onClick={handleAddMethod} className="px-6 py-3 bg-blue-600 text-white rounded-lg">
                 {language === 'ar' ? 'حفظ' : 'Save'}
               </button>
             </div>
