@@ -407,5 +407,198 @@ export default function SystemAdminDashboard() {
   )
 }
 
-// استيراد باقي المكونات من الملف الأصلي
-// (سأضيف الدوال الباقية في الرسالة التالية)
+// Overview Section
+function OverviewSection({ language }) {
+  const stats = [
+    { icon: 'fa-hotel', labelAr: 'إجمالي الفنادق', labelEn: 'Total Hotels', value: '45', color: 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400' },
+    { icon: 'fa-user-tie', labelAr: 'مدراء الفنادق', labelEn: 'Hotel Managers', value: '38', color: 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400' },
+    { icon: 'fa-users', labelAr: 'المندوبين', labelEn: 'Agents', value: '12', color: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400' },
+    { icon: 'fa-dollar-sign', labelAr: 'الإيرادات الشهرية', labelEn: 'Monthly Revenue', value: '$12,500', color: 'bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400' }
+  ]
+
+  return (
+    <div>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+        {language === 'ar' ? 'نظرة عامة' : 'Overview'}
+      </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {stats.map((stat, index) => (
+          <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+            <div className={`w-12 h-12 ${stat.color} rounded-full flex items-center justify-center mb-4`}>
+              <i className={`fas ${stat.icon} text-xl`}></i>
+            </div>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">
+              {language === 'ar' ? stat.labelAr : stat.labelEn}
+            </p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+            {language === 'ar' ? 'الاشتراكات الحديثة' : 'Recent Subscriptions'}
+          </h3>
+          <div className="space-y-3">
+            {[1, 2, 3].map((item) => (
+              <div key={item} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                    <i className="fas fa-hotel text-blue-600 dark:text-blue-400"></i>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-white">
+                      {language === 'ar' ? `فندق بغداد ${item}` : `Baghdad Hotel ${item}`}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {language === 'ar' ? 'اشتراك سنوي' : 'Annual Subscription'}
+                    </p>
+                  </div>
+                </div>
+                <span className="text-green-600 dark:text-green-400 font-bold">$200</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+            {language === 'ar' ? 'أنشطة حديثة' : 'Recent Activities'}
+          </h3>
+          <div className="space-y-3">
+            {[
+              { icon: 'fa-plus', textAr: 'إضافة فندق جديد', textEn: 'New hotel added', time: '5 min ago' },
+              { icon: 'fa-check', textAr: 'تجديد اشتراك', textEn: 'Subscription renewed', time: '15 min ago' },
+              { icon: 'fa-user-plus', textAr: 'إضافة مندوب جديد', textEn: 'New agent added', time: '1 hour ago' }
+            ].map((activity, index) => (
+              <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div className="w-8 h-8 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center">
+                  <i className={`fas ${activity.icon} text-gray-600 dark:text-gray-300 text-sm`}></i>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-gray-900 dark:text-white">{language === 'ar' ? activity.textAr : activity.textEn}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{activity.time}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Placeholder Components - يمكن تطويرها لاحقاً
+function HotelsSection({ language }) {
+  return (
+    <div>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+        {language === 'ar' ? 'إدارة الفنادق' : 'Hotels Management'}
+      </h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg text-center">
+        <i className="fas fa-hotel text-6xl text-blue-600 dark:text-blue-400 mb-4"></i>
+        <p className="text-xl text-gray-600 dark:text-gray-400">
+          {language === 'ar' ? 'قسم إدارة الفنادق قيد التطوير' : 'Hotels Management Section Under Development'}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function HotelManagersSection({ language }) {
+  return (
+    <div>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+        {language === 'ar' ? 'مدراء الفنادق' : 'Hotel Managers'}
+      </h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg text-center">
+        <i className="fas fa-user-tie text-6xl text-green-600 dark:text-green-400 mb-4"></i>
+        <p className="text-xl text-gray-600 dark:text-gray-400">
+          {language === 'ar' ? 'قسم مدراء الفنادق قيد التطوير' : 'Hotel Managers Section Under Development'}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function SubscriptionsSection({ language }) {
+  return (
+    <div>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+        {language === 'ar' ? 'إدارة الاشتراكات' : 'Subscriptions Management'}
+      </h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg text-center">
+        <i className="fas fa-calendar-alt text-6xl text-purple-600 dark:text-purple-400 mb-4"></i>
+        <p className="text-xl text-gray-600 dark:text-gray-400">
+          {language === 'ar' ? 'قسم الاشتراكات قيد التطوير' : 'Subscriptions Section Under Development'}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function PaymentsSection({ language }) {
+  return (
+    <div>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+        {language === 'ar' ? 'إدارة المدفوعات' : 'Payments Management'}
+      </h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg text-center">
+        <i className="fas fa-money-bill-wave text-6xl text-yellow-600 dark:text-yellow-400 mb-4"></i>
+        <p className="text-xl text-gray-600 dark:text-gray-400">
+          {language === 'ar' ? 'قسم المدفوعات قيد التطوير' : 'Payments Section Under Development'}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function AgentsSection({ language }) {
+  return (
+    <div>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+        {language === 'ar' ? 'المندوبين والوكلاء' : 'Agents & Representatives'}
+      </h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg text-center">
+        <i className="fas fa-users text-6xl text-indigo-600 dark:text-indigo-400 mb-4"></i>
+        <p className="text-xl text-gray-600 dark:text-gray-400">
+          {language === 'ar' ? 'قسم المندوبين قيد التطوير' : 'Agents Section Under Development'}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function CashboxSection({ language }) {
+  return (
+    <div>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+        {language === 'ar' ? 'الصندوق الخاص' : 'My Cashbox'}
+      </h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg text-center">
+        <i className="fas fa-cash-register text-6xl text-red-600 dark:text-red-400 mb-4"></i>
+        <p className="text-xl text-gray-600 dark:text-gray-400">
+          {language === 'ar' ? 'قسم الصندوق قيد التطوير' : 'Cashbox Section Under Development'}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function ReportsSection({ language }) {
+  return (
+    <div>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+        {language === 'ar' ? 'التقارير' : 'Reports'}
+      </h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg text-center">
+        <i className="fas fa-file-alt text-6xl text-teal-600 dark:text-teal-400 mb-4"></i>
+        <p className="text-xl text-gray-600 dark:text-gray-400">
+          {language === 'ar' ? 'قسم التقارير قيد التطوير' : 'Reports Section Under Development'}
+        </p>
+      </div>
+    </div>
+  )
+}
