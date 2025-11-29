@@ -108,6 +108,28 @@ export default function HallsSection({ language }) {
     setFormData({ nameAr: '', nameEn: '', capacity: '', floor: '', pricePerHour: '', equipment: '', status: 'available' })
   }
 
+  const handleAddHall = () => {
+    if (!formData.nameAr || !formData.nameEn || !formData.capacity || !formData.floor || !formData.pricePerHour || !formData.equipment) {
+      alert(language === 'ar' ? 'الرجاء ملء جميع الحقول' : 'Please fill all fields')
+      return
+    }
+
+    const newHall = {
+      id: Math.max(...halls.map(h => h.id)) + 1,
+      nameAr: formData.nameAr,
+      nameEn: formData.nameEn,
+      capacity: parseInt(formData.capacity),
+      floor: parseInt(formData.floor),
+      pricePerHour: parseInt(formData.pricePerHour),
+      equipment: formData.equipment.split(',').map(e => e.trim()),
+      status: formData.status
+    }
+
+    setHalls([...halls, newHall])
+    setShowAddModal(false)
+    setFormData({ nameAr: '', nameEn: '', capacity: '', floor: '', pricePerHour: '', equipment: '', status: 'available' })
+  }
+
   const getStatusColor = (status) => {
     return status === 'available' 
       ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' 
@@ -195,23 +217,89 @@ export default function HallsSection({ language }) {
               {language === 'ar' ? 'إضافة قاعة جديدة' : 'Add New Hall'}
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <input type="text" placeholder={language === 'ar' ? 'اسم القاعة (عربي)' : 'Hall Name (Arabic)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'اسم القاعة (إنجليزي)' : 'Hall Name (English)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="number" placeholder={language === 'ar' ? 'السعة' : 'Capacity'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="number" placeholder={language === 'ar' ? 'السعر لكل ساعة' : 'Price per Hour'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <select className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white">
-                <option>{language === 'ar' ? 'الطابق' : 'Floor'}</option>
-                <option value="1">{language === 'ar' ? 'الطابق الأول' : 'First Floor'}</option>
-                <option value="2">{language === 'ar' ? 'الطابق الثاني' : 'Second Floor'}</option>
-                <option value="3">{language === 'ar' ? 'الطابق الثالث' : 'Third Floor'}</option>
-              </select>
-              <input type="text" placeholder={language === 'ar' ? 'المعدات (افصل بفاصلة)' : 'Equipment (comma separated)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم القاعة (عربي)' : 'Hall Name (Arabic)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameAr}
+                  onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم القاعة (عربي)' : 'Hall Name (Arabic)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم القاعة (إنجليزي)' : 'Hall Name (English)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameEn}
+                  onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم القاعة (إنجليزي)' : 'Hall Name (English)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'السعة' : 'Capacity'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.capacity}
+                  onChange={(e) => setFormData({...formData, capacity: e.target.value})}
+                  placeholder={language === 'ar' ? 'السعة' : 'Capacity'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'السعر لكل ساعة' : 'Price per Hour'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.pricePerHour}
+                  onChange={(e) => setFormData({...formData, pricePerHour: e.target.value})}
+                  placeholder={language === 'ar' ? 'السعر لكل ساعة' : 'Price per Hour'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الطابق' : 'Floor'}
+                </label>
+                <select 
+                  value={formData.floor}
+                  onChange={(e) => setFormData({...formData, floor: e.target.value})}
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="">{language === 'ar' ? 'الطابق' : 'Floor'}</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'المعدات (افصل بفاصلة)' : 'Equipment (comma separated)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.equipment}
+                  onChange={(e) => setFormData({...formData, equipment: e.target.value})}
+                  placeholder={language === 'ar' ? 'المعدات (افصل بفاصلة)' : 'Equipment (comma separated)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
             </div>
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setShowAddModal(false)} className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
                 {language === 'ar' ? 'إلغاء' : 'Cancel'}
               </button>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
+              <button onClick={handleAddHall} className="px-6 py-3 bg-blue-600 text-white rounded-lg">
                 {language === 'ar' ? 'حفظ' : 'Save'}
               </button>
             </div>
