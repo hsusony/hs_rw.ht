@@ -83,6 +83,27 @@ export default function BranchesSection({ language }) {
     setFormData({ nameAr: '', nameEn: '', location: '', manager: '', phone: '', rooms: '' })
   }
 
+  const handleAddBranch = () => {
+    if (!formData.nameAr || !formData.nameEn || !formData.location || !formData.manager || !formData.phone || !formData.rooms) {
+      alert(language === 'ar' ? 'الرجاء ملء جميع الحقول' : 'Please fill all fields')
+      return
+    }
+
+    const newBranch = {
+      id: branches.length > 0 ? Math.max(...branches.map(b => b.id)) + 1 : 1,
+      nameAr: formData.nameAr,
+      nameEn: formData.nameEn,
+      location: formData.location,
+      manager: formData.manager,
+      phone: formData.phone,
+      rooms: parseInt(formData.rooms)
+    }
+
+    setBranches([...branches, newBranch])
+    setShowAddModal(false)
+    setFormData({ nameAr: '', nameEn: '', location: '', manager: '', phone: '', rooms: '' })
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -171,18 +192,93 @@ export default function BranchesSection({ language }) {
               </h3>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <input type="text" placeholder={language === 'ar' ? 'اسم الفرع (عربي)' : 'Branch Name (Arabic)'} className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'اسم الفرع (إنجليزي)' : 'Branch Name (English)'} className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'الموقع' : 'Location'} className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'المدير' : 'Manager'} className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'رقم الهاتف' : 'Phone Number'} className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="number" placeholder={language === 'ar' ? 'عدد الغرف' : 'Number of Rooms'} className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white" />
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم الفرع (عربي)' : 'Branch Name (Arabic)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameAr}
+                  onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم الفرع (عربي)' : 'Branch Name (Arabic)'} 
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم الفرع (إنجليزي)' : 'Branch Name (English)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameEn}
+                  onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم الفرع (إنجليزي)' : 'Branch Name (English)'} 
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الموقع' : 'Location'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.location}
+                  onChange={(e) => setFormData({...formData, location: e.target.value})}
+                  placeholder={language === 'ar' ? 'الموقع' : 'Location'} 
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'المدير' : 'Manager'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.manager}
+                  onChange={(e) => setFormData({...formData, manager: e.target.value})}
+                  placeholder={language === 'ar' ? 'المدير' : 'Manager'} 
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'رقم الهاتف' : 'Phone Number'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  placeholder={language === 'ar' ? 'رقم الهاتف' : 'Phone Number'} 
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'عدد الغرف' : 'Number of Rooms'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.rooms}
+                  onChange={(e) => setFormData({...formData, rooms: e.target.value})}
+                  placeholder={language === 'ar' ? 'عدد الغرف' : 'Number of Rooms'} 
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500" 
+                />
+              </div>
             </div>
             <div className="flex justify-end gap-3 mt-6">
-              <button onClick={() => setShowAddModal(false)} className="px-8 py-3 bg-gradient-to-r from-gray-400 to-gray-500 text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all font-semibold">
+              <button 
+                onClick={() => {
+                  setShowAddModal(false)
+                  setFormData({ nameAr: '', nameEn: '', location: '', manager: '', phone: '', rooms: '' })
+                }} 
+                className="px-8 py-3 bg-gradient-to-r from-gray-400 to-gray-500 text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all font-semibold"
+              >
                 {language === 'ar' ? 'إلغاء' : 'Cancel'}
               </button>
-              <button className="px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl hover:shadow-xl transform hover:scale-105 transition-all font-semibold flex items-center gap-2">
+              <button 
+                onClick={handleAddBranch}
+                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl hover:shadow-xl transform hover:scale-105 transition-all font-semibold flex items-center gap-2"
+              >
                 <i className="fas fa-save"></i>
                 {language === 'ar' ? 'حفظ' : 'Save'}
               </button>
