@@ -109,6 +109,26 @@ export default function AdditionalServicesSection({ language }) {
     setFormData({ nameAr: '', nameEn: '', price: '', category: '', active: true })
   }
 
+  const handleAddService = () => {
+    if (!formData.nameAr || !formData.nameEn || !formData.price || !formData.category) {
+      alert(language === 'ar' ? 'الرجاء ملء جميع الحقول' : 'Please fill all fields')
+      return
+    }
+
+    const newService = {
+      id: Math.max(...services.map(s => s.id)) + 1,
+      nameAr: formData.nameAr,
+      nameEn: formData.nameEn,
+      price: parseInt(formData.price),
+      category: formData.category,
+      active: formData.active
+    }
+
+    setServices([...services, newService])
+    setShowAddModal(false)
+    setFormData({ nameAr: '', nameEn: '', price: '', category: '', active: true })
+  }
+
   const getCategoryIcon = (category) => {
     switch(category) {
       case 'food': return 'fa-utensils'
@@ -198,24 +218,65 @@ export default function AdditionalServicesSection({ language }) {
               {language === 'ar' ? 'إضافة خدمة إضافية' : 'Add Additional Service'}
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <input type="text" placeholder={language === 'ar' ? 'اسم الخدمة (عربي)' : 'Service Name (Arabic)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'اسم الخدمة (إنجليزي)' : 'Service Name (English)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="number" placeholder={language === 'ar' ? 'السعر' : 'Price'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <select className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white">
-                <option>{language === 'ar' ? 'الفئة' : 'Category'}</option>
-                <option value="food">{language === 'ar' ? 'طعام' : 'Food'}</option>
-                <option value="laundry">{language === 'ar' ? 'غسيل' : 'Laundry'}</option>
-                <option value="minibar">{language === 'ar' ? 'مينيبار' : 'Minibar'}</option>
-                <option value="transport">{language === 'ar' ? 'مواصلات' : 'Transport'}</option>
-                <option value="wellness">{language === 'ar' ? 'عافية' : 'Wellness'}</option>
-              </select>
-              <textarea placeholder={language === 'ar' ? 'الوصف' : 'Description'} rows="3" className="col-span-2 w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم الخدمة (عربي)' : 'Service Name (Arabic)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameAr}
+                  onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم الخدمة (عربي)' : 'Service Name (Arabic)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم الخدمة (إنجليزي)' : 'Service Name (English)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameEn}
+                  onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم الخدمة (إنجليزي)' : 'Service Name (English)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'السعر' : 'Price'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.price}
+                  onChange={(e) => setFormData({...formData, price: e.target.value})}
+                  placeholder={language === 'ar' ? 'السعر' : 'Price'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الفئة' : 'Category'}
+                </label>
+                <select 
+                  value={formData.category}
+                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="">{language === 'ar' ? 'الفئة' : 'Category'}</option>
+                  <option value="food">{language === 'ar' ? 'طعام' : 'Food'}</option>
+                  <option value="laundry">{language === 'ar' ? 'غسيل' : 'Laundry'}</option>
+                  <option value="minibar">{language === 'ar' ? 'مينيبار' : 'Minibar'}</option>
+                  <option value="transport">{language === 'ar' ? 'مواصلات' : 'Transport'}</option>
+                  <option value="wellness">{language === 'ar' ? 'عافية' : 'Wellness'}</option>
+                </select>
+              </div>
             </div>
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setShowAddModal(false)} className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
                 {language === 'ar' ? 'إلغاء' : 'Cancel'}
               </button>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
+              <button onClick={handleAddService} className="px-6 py-3 bg-blue-600 text-white rounded-lg">
                 {language === 'ar' ? 'حفظ' : 'Save'}
               </button>
             </div>
