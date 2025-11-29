@@ -1,14 +1,28 @@
 'use client'
 
+import Image from 'next/image'
+import { useState, useEffect } from 'react'
+import { useLanguage } from '../context/LanguageContext'
+import { translations } from '../translations'
+
 export default function Sidebar({ currentView, setCurrentView, isOpen, setIsOpen }) {
+  const { language } = useLanguage()
+  const t = translations[language]
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const menuItems = [
-    { id: 'dashboard', name: 'لوحة التحكم', icon: 'fa-tachometer-alt' },
-    { id: 'hotels', name: 'الفنادق', icon: 'fa-hotel' },
-    { id: 'rooms', name: 'الغرف', icon: 'fa-bed' },
-    { id: 'reservations', name: 'الحجوزات', icon: 'fa-calendar-check' },
-    { id: 'customers', name: 'العملاء', icon: 'fa-users' },
-    { id: 'tasks', name: 'المهام', icon: 'fa-tasks' },
-    { id: 'reports', name: 'التقارير', icon: 'fa-chart-bar' },
+    { id: 'dashboard', name: t.dashboard, icon: 'fa-tachometer-alt' },
+    { id: 'hotels', name: t.hotels, icon: 'fa-hotel' },
+    { id: 'rooms', name: t.rooms, icon: 'fa-bed' },
+    { id: 'reservations', name: t.reservations, icon: 'fa-calendar-check' },
+    { id: 'customers', name: t.customers, icon: 'fa-users' },
+    { id: 'tasks', name: t.tasks, icon: 'fa-tasks' },
+    { id: 'reports', name: t.reports, icon: 'fa-chart-bar' },
+    { id: 'settings', name: t.settings, icon: 'fa-cog' },
   ]
 
   return (
@@ -26,17 +40,15 @@ export default function Sidebar({ currentView, setCurrentView, isOpen, setIsOpen
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        <div className="w-64 h-full bg-gradient-to-br from-blue-900 to-blue-700 text-white shadow-2xl relative overflow-hidden">
-          {/* Sparkle effect overlay */}
-          <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-1000 pointer-events-none">
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-white to-transparent opacity-20 transform rotate-45 translate-x-full animate-sparkle" />
-          </div>
+        <div className="w-64 h-full bg-gradient-to-b from-gray-900 to-gray-800 dark:from-gray-950 dark:to-gray-900 text-white shadow-2xl relative transition-colors duration-300">
 
           {/* Header */}
-          <div className="p-4 border-b border-blue-700 flex items-center justify-between">
-            <h1 className="text-xl font-bold flex items-center">
-              <i className="fas fa-hotel ml-2 text-blue-300"></i>
-              <span>NINESOFT</span>
+          <div className="relative p-6 border-b border-gray-700 flex items-center justify-between">
+            <h1 className="text-xl font-bold flex items-center tracking-wide">
+              <div className="bg-gray-700 p-2.5 rounded-lg ml-3">
+                <i className="fas fa-hotel text-gray-300 text-lg"></i>
+              </div>
+              <span className="text-white">NINESOFT</span>
             </h1>
             <button 
               onClick={() => setIsOpen(false)}
@@ -47,7 +59,7 @@ export default function Sidebar({ currentView, setCurrentView, isOpen, setIsOpen
           </div>
 
           {/* Menu */}
-          <nav className="mt-4">
+          <nav className="mt-4 px-3">
             {menuItems.map((item) => (
               <button
                 key={item.id}
@@ -57,29 +69,38 @@ export default function Sidebar({ currentView, setCurrentView, isOpen, setIsOpen
                     setIsOpen(false)
                   }
                 }}
-                className={`sidebar-item w-full flex items-center p-3 mx-2 rounded-lg mb-2 transition-all ${
+                className={`w-full flex items-center p-3.5 mb-2 rounded-lg transition-all duration-200 ${
                   currentView === item.id
-                    ? 'bg-white bg-opacity-25 shadow-lg'
-                    : 'hover:bg-white hover:bg-opacity-20'
+                    ? 'bg-gray-700 text-white border-r-4 border-blue-500'
+                    : 'text-gray-300 hover:bg-gray-700/50 hover:text-white'
                 }`}
               >
-                <i className={`fas ${item.icon} ml-2 text-blue-300`}></i>
-                <span>{item.name}</span>
+                <i className={`fas ${item.icon} text-base ml-3 ${
+                  currentView === item.id ? 'text-blue-400' : 'text-gray-400'
+                }`}></i>
+                <span className="font-semibold text-sm">{item.name}</span>
               </button>
             ))}
           </nav>
 
           {/* User Profile */}
-          <div className="absolute bottom-0 w-full p-4 border-t border-blue-700">
+          <div className="absolute bottom-0 w-full p-4 border-t border-gray-700">
             <div className="flex items-center">
-              <img
-                className="h-10 w-10 rounded-full object-cover border-2 border-blue-400"
-                src="https://randomuser.me/api/portraits/men/32.jpg"
-                alt="User"
-              />
+              <div className="h-10 w-10 rounded-full border-2 border-gray-600 overflow-hidden relative flex-shrink-0 bg-gray-700">
+                {mounted && (
+                  <Image
+                    src="https://randomuser.me/api/portraits/men/32.jpg"
+                    alt="User"
+                    width={40}
+                    height={40}
+                    className="object-cover"
+                    unoptimized
+                  />
+                )}
+              </div>
               <div className="mr-3">
-                <p className="text-sm font-medium">مدير النظام</p>
-                <p className="text-xs text-blue-300">Admin</p>
+                <p className="text-sm font-semibold text-white">{t.systemManager}</p>
+                <p className="text-xs text-gray-400">{t.admin}</p>
               </div>
             </div>
           </div>
