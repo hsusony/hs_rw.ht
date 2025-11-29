@@ -85,6 +85,26 @@ export default function PartnersSection({ language }) {
     setFormData({ nameAr: '', nameEn: '', contactPerson: '', phone: '', commission: '' })
   }
 
+  const handleAddPartner = () => {
+    if (!formData.nameAr || !formData.nameEn || !formData.contactPerson || !formData.phone || !formData.commission) {
+      alert(language === 'ar' ? 'الرجاء ملء جميع الحقول' : 'Please fill all fields')
+      return
+    }
+
+    const newPartner = {
+      id: partners.length > 0 ? Math.max(...partners.map(p => p.id)) + 1 : 1,
+      nameAr: formData.nameAr,
+      nameEn: formData.nameEn,
+      contactPerson: formData.contactPerson,
+      phone: formData.phone,
+      commission: parseFloat(formData.commission)
+    }
+
+    setPartners([...partners, newPartner])
+    setShowAddModal(false)
+    setFormData({ nameAr: '', nameEn: '', contactPerson: '', phone: '', commission: '' })
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -166,18 +186,82 @@ export default function PartnersSection({ language }) {
               {language === 'ar' ? 'إضافة شريك جديد' : 'Add New Partner'}
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <input type="text" placeholder={language === 'ar' ? 'اسم الشريك (عربي)' : 'Partner Name (Arabic)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'اسم الشريك (إنجليزي)' : 'Partner Name (English)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'جهة الاتصال' : 'Contact Person'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'الهاتف' : 'Phone'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="email" placeholder={language === 'ar' ? 'البريد الإلكتروني' : 'Email'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="number" placeholder={language === 'ar' ? 'نسبة العمولة %' : 'Commission %'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم الشريك (عربي)' : 'Partner Name (Arabic)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameAr}
+                  onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم الشريك (عربي)' : 'Partner Name (Arabic)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-purple-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم الشريك (إنجليزي)' : 'Partner Name (English)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameEn}
+                  onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم الشريك (إنجليزي)' : 'Partner Name (English)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-purple-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'جهة الاتصال' : 'Contact Person'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.contactPerson}
+                  onChange={(e) => setFormData({...formData, contactPerson: e.target.value})}
+                  placeholder={language === 'ar' ? 'جهة الاتصال' : 'Contact Person'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-purple-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الهاتف' : 'Phone'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  placeholder={language === 'ar' ? 'الهاتف' : 'Phone'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-purple-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'نسبة العمولة %' : 'Commission %'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.commission}
+                  onChange={(e) => setFormData({...formData, commission: e.target.value})}
+                  placeholder={language === 'ar' ? 'نسبة العمولة %' : 'Commission %'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-purple-500" 
+                />
+              </div>
             </div>
             <div className="flex justify-end gap-3 mt-6">
-              <button onClick={() => setShowAddModal(false)} className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
+              <button 
+                onClick={() => {
+                  setShowAddModal(false)
+                  setFormData({ nameAr: '', nameEn: '', contactPerson: '', phone: '', commission: '' })
+                }} 
+                className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              >
                 {language === 'ar' ? 'إلغاء' : 'Cancel'}
               </button>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
+              <button 
+                onClick={handleAddPartner}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              >
+                <i className="fas fa-save"></i>
                 {language === 'ar' ? 'حفظ' : 'Save'}
               </button>
             </div>
