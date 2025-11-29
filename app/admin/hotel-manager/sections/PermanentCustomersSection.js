@@ -89,6 +89,30 @@ export default function PermanentCustomersSection({ language }) {
     setFormData({ nameAr: '', nameEn: '', type: 'tourism_company', contactPerson: '', phone: '', email: '', discountPercent: '', totalBookings: 0, status: 'active' })
   }
 
+  const handleAddCustomer = () => {
+    if (!formData.nameAr || !formData.nameEn || !formData.type || !formData.contactPerson || !formData.phone || !formData.email || formData.discountPercent === '') {
+      alert(language === 'ar' ? 'الرجاء ملء جميع الحقول' : 'Please fill all fields')
+      return
+    }
+
+    const newCustomer = {
+      id: Math.max(...customers.map(c => c.id)) + 1,
+      nameAr: formData.nameAr,
+      nameEn: formData.nameEn,
+      type: formData.type,
+      contactPerson: formData.contactPerson,
+      phone: formData.phone,
+      email: formData.email,
+      discountPercent: parseInt(formData.discountPercent),
+      totalBookings: 0,
+      status: 'active'
+    }
+
+    setCustomers([...customers, newCustomer])
+    setShowAddModal(false)
+    setFormData({ nameAr: '', nameEn: '', type: 'tourism_company', contactPerson: '', phone: '', email: '', discountPercent: '', totalBookings: 0, status: 'active' })
+  }
+
   const getTypeInfo = (type) => {
     switch(type) {
       case 'tourism_company':
@@ -215,24 +239,97 @@ export default function PermanentCustomersSection({ language }) {
               {language === 'ar' ? 'إضافة زبون دائم' : 'Add Permanent Customer'}
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <input type="text" placeholder={language === 'ar' ? 'اسم الشركة (عربي)' : 'Company Name (Arabic)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'اسم الشركة (إنجليزي)' : 'Company Name (English)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <select className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white">
-                <option>{language === 'ar' ? 'النوع' : 'Type'}</option>
-                <option value="tourism_company">{language === 'ar' ? 'شركة سياحة' : 'Tourism Company'}</option>
-                <option value="corporate">{language === 'ar' ? 'شركة تجارية' : 'Corporate'}</option>
-              </select>
-              <input type="number" placeholder={language === 'ar' ? 'نسبة الخصم %' : 'Discount %'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'اسم المسؤول' : 'Contact Person'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="tel" placeholder={language === 'ar' ? 'رقم الهاتف' : 'Phone Number'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="email" placeholder={language === 'ar' ? 'البريد الإلكتروني' : 'Email'} className="col-span-2 w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <textarea placeholder={language === 'ar' ? 'ملاحظات' : 'Notes'} rows="3" className="col-span-2 w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم الشركة (عربي)' : 'Company Name (Arabic)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameAr}
+                  onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم الشركة (عربي)' : 'Company Name (Arabic)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم الشركة (إنجليزي)' : 'Company Name (English)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameEn}
+                  onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم الشركة (إنجليزي)' : 'Company Name (English)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'النوع' : 'Type'}
+                </label>
+                <select 
+                  value={formData.type}
+                  onChange={(e) => setFormData({...formData, type: e.target.value})}
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="tourism_company">{language === 'ar' ? 'شركة سياحة' : 'Tourism Company'}</option>
+                  <option value="corporate">{language === 'ar' ? 'شركة تجارية' : 'Corporate'}</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'نسبة الخصم %' : 'Discount %'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.discountPercent}
+                  onChange={(e) => setFormData({...formData, discountPercent: e.target.value})}
+                  placeholder={language === 'ar' ? 'نسبة الخصم %' : 'Discount %'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم المسؤول' : 'Contact Person'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.contactPerson}
+                  onChange={(e) => setFormData({...formData, contactPerson: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم المسؤول' : 'Contact Person'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'رقم الهاتف' : 'Phone Number'}
+                </label>
+                <input 
+                  type="tel" 
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  placeholder={language === 'ar' ? 'رقم الهاتف' : 'Phone Number'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'البريد الإلكتروني' : 'Email'}
+                </label>
+                <input 
+                  type="email" 
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  placeholder={language === 'ar' ? 'البريد الإلكتروني' : 'Email'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
             </div>
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setShowAddModal(false)} className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
                 {language === 'ar' ? 'إلغاء' : 'Cancel'}
               </button>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
+              <button onClick={handleAddCustomer} className="px-6 py-3 bg-blue-600 text-white rounded-lg">
                 {language === 'ar' ? 'حفظ' : 'Save'}
               </button>
             </div>
