@@ -31,6 +31,14 @@ export default function MaintenancePage() {
     { id: 4, room: '401', issue: 'إضاءة ضعيفة', priority: 'low', status: 'inProgress', reportedBy: 'التنظيف', assignedTo: 'محمد علي', date: '2025-11-18' },
     { id: 5, room: '501', issue: 'تلفاز لا يعمل', priority: 'low', status: 'pending', reportedBy: 'ضيف', assignedTo: '-', date: '2025-11-18' }
   ])
+
+  const [rooms, setRooms] = useState([
+    { 
+      number: '201', 
+      floor: 2, 
+      status: 'under_maintenance', 
+      issue: 'تسريب في الحمام', 
+      issueType: 'سباكة',
       priority: 'متوسطة',
       reportedBy: 'نزيل',
       reportedTime: '2024-11-17 15:30',
