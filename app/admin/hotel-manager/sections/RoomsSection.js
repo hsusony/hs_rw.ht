@@ -60,6 +60,27 @@ export default function RoomsSection({ language }) {
     setFormData({ number: '', floor: '', type: '', view: '', price: '', status: '' })
   }
 
+  const handleAddRoom = () => {
+    if (!formData.number || !formData.floor || !formData.type || !formData.price || !formData.view || !formData.status) {
+      alert(language === 'ar' ? 'الرجاء ملء جميع الحقول' : 'Please fill all fields')
+      return
+    }
+
+    const newRoom = {
+      id: Math.max(...rooms.map(r => r.id)) + 1,
+      number: formData.number,
+      floor: parseInt(formData.floor),
+      type: formData.type,
+      view: formData.view,
+      price: parseInt(formData.price),
+      status: formData.status
+    }
+
+    setRooms([...rooms, newRoom])
+    setShowAddModal(false)
+    setFormData({ number: '', floor: '', type: '', view: '', price: '', status: '' })
+  }
+
   const getStatusColor = (status) => {
     switch(status) {
       case 'available': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
@@ -165,34 +186,92 @@ export default function RoomsSection({ language }) {
               {language === 'ar' ? 'إضافة غرفة جديدة' : 'Add New Room'}
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <input type="text" placeholder={language === 'ar' ? 'رقم الغرفة' : 'Room Number'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <select className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white">
-                <option>{language === 'ar' ? 'اختر الطابق' : 'Select Floor'}</option>
-                <option value="1">{language === 'ar' ? 'الطابق الأول' : 'First Floor'}</option>
-                <option value="2">{language === 'ar' ? 'الطابق الثاني' : 'Second Floor'}</option>
-                <option value="3">{language === 'ar' ? 'الطابق الثالث' : 'Third Floor'}</option>
-              </select>
-              <select className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white">
-                <option>{language === 'ar' ? 'نوع الغرفة' : 'Room Type'}</option>
-                <option>{language === 'ar' ? 'غرفة فردية' : 'Single Room'}</option>
-                <option>{language === 'ar' ? 'غرفة مزدوجة' : 'Double Room'}</option>
-                <option>{language === 'ar' ? 'جناح عائلي' : 'Family Suite'}</option>
-                <option>{language === 'ar' ? 'جناح ملكي' : 'Royal Suite'}</option>
-              </select>
-              <input type="number" placeholder={language === 'ar' ? 'السعر لليلة' : 'Price per Night'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'نوع الإطلالة' : 'View Type'} className="col-span-2 w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <select className="col-span-2 w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white">
-                <option>{language === 'ar' ? 'الحالة' : 'Status'}</option>
-                <option value="available">{language === 'ar' ? 'متاحة' : 'Available'}</option>
-                <option value="occupied">{language === 'ar' ? 'محجوزة' : 'Occupied'}</option>
-                <option value="maintenance">{language === 'ar' ? 'صيانة' : 'Maintenance'}</option>
-              </select>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'رقم الغرفة' : 'Room Number'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.number}
+                  onChange={(e) => setFormData({...formData, number: e.target.value})}
+                  placeholder={language === 'ar' ? 'رقم الغرفة' : 'Room Number'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الطابق' : 'Floor'}
+                </label>
+                <select 
+                  value={formData.floor}
+                  onChange={(e) => setFormData({...formData, floor: e.target.value})}
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="">{language === 'ar' ? 'اختر الطابق' : 'Select Floor'}</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'نوع الغرفة' : 'Room Type'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.type}
+                  onChange={(e) => setFormData({...formData, type: e.target.value})}
+                  placeholder={language === 'ar' ? 'نوع الغرفة' : 'Room Type'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'السعر لليلة' : 'Price per Night'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.price}
+                  onChange={(e) => setFormData({...formData, price: e.target.value})}
+                  placeholder={language === 'ar' ? 'السعر لليلة' : 'Price per Night'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'نوع الإطلالة' : 'View Type'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.view}
+                  onChange={(e) => setFormData({...formData, view: e.target.value})}
+                  placeholder={language === 'ar' ? 'نوع الإطلالة' : 'View Type'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الحالة' : 'Status'}
+                </label>
+                <select 
+                  value={formData.status}
+                  onChange={(e) => setFormData({...formData, status: e.target.value})}
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="">{language === 'ar' ? 'الحالة' : 'Status'}</option>
+                  <option value="available">{language === 'ar' ? 'متاحة' : 'Available'}</option>
+                  <option value="occupied">{language === 'ar' ? 'محجوزة' : 'Occupied'}</option>
+                  <option value="maintenance">{language === 'ar' ? 'صيانة' : 'Maintenance'}</option>
+                </select>
+              </div>
             </div>
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setShowAddModal(false)} className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
                 {language === 'ar' ? 'إلغاء' : 'Cancel'}
               </button>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
+              <button onClick={handleAddRoom} className="px-6 py-3 bg-blue-600 text-white rounded-lg">
                 {language === 'ar' ? 'حفظ' : 'Save'}
               </button>
             </div>
