@@ -109,6 +109,28 @@ export default function EmployeesSection({ language }) {
     setFormData({ nameAr: '', nameEn: '', role: 'reception', salary: '', phone: '', email: '', permissions: [] })
   }
 
+  const handleAddEmployee = () => {
+    if (!formData.nameAr || !formData.nameEn || !formData.role || !formData.salary || !formData.phone || !formData.email) {
+      alert(language === 'ar' ? 'الرجاء ملء جميع الحقول' : 'Please fill all fields')
+      return
+    }
+
+    const newEmployee = {
+      id: Math.max(...employees.map(e => e.id)) + 1,
+      nameAr: formData.nameAr,
+      nameEn: formData.nameEn,
+      role: formData.role,
+      salary: parseInt(formData.salary),
+      phone: formData.phone,
+      email: formData.email,
+      permissions: formData.permissions
+    }
+
+    setEmployees([...employees, newEmployee])
+    setShowAddModal(false)
+    setFormData({ nameAr: '', nameEn: '', role: 'reception', salary: '', phone: '', email: '', permissions: [] })
+  }
+
   const togglePermission = (permission) => {
     setFormData(prev => ({
       ...prev,
@@ -257,18 +279,81 @@ export default function EmployeesSection({ language }) {
               {language === 'ar' ? 'إضافة موظف جديد' : 'Add New Employee'}
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <input type="text" placeholder={language === 'ar' ? 'الاسم (عربي)' : 'Name (Arabic)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'الاسم (إنجليزي)' : 'Name (English)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <select className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white">
-                <option>{language === 'ar' ? 'الوظيفة' : 'Role'}</option>
-                <option value="accountant">{language === 'ar' ? 'محاسب' : 'Accountant'}</option>
-                <option value="reception">{language === 'ar' ? 'ريسبشن' : 'Reception'}</option>
-                <option value="maintenance">{language === 'ar' ? 'صيانة' : 'Maintenance'}</option>
-                <option value="cleaning">{language === 'ar' ? 'تنظيف' : 'Cleaning'}</option>
-              </select>
-              <input type="number" placeholder={language === 'ar' ? 'الراتب' : 'Salary'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="tel" placeholder={language === 'ar' ? 'رقم الهاتف' : 'Phone Number'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="email" placeholder={language === 'ar' ? 'البريد الإلكتروني' : 'Email'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الاسم (عربي)' : 'Name (Arabic)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameAr}
+                  onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                  placeholder={language === 'ar' ? 'الاسم (عربي)' : 'Name (Arabic)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الاسم (إنجليزي)' : 'Name (English)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameEn}
+                  onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                  placeholder={language === 'ar' ? 'الاسم (إنجليزي)' : 'Name (English)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الوظيفة' : 'Role'}
+                </label>
+                <select 
+                  value={formData.role}
+                  onChange={(e) => setFormData({...formData, role: e.target.value})}
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="reception">{language === 'ar' ? 'ريسبشن' : 'Reception'}</option>
+                  <option value="accountant">{language === 'ar' ? 'محاسب' : 'Accountant'}</option>
+                  <option value="maintenance">{language === 'ar' ? 'صيانة' : 'Maintenance'}</option>
+                  <option value="cleaning">{language === 'ar' ? 'تنظيف' : 'Cleaning'}</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الراتب' : 'Salary'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.salary}
+                  onChange={(e) => setFormData({...formData, salary: e.target.value})}
+                  placeholder={language === 'ar' ? 'الراتب' : 'Salary'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'رقم الهاتف' : 'Phone Number'}
+                </label>
+                <input 
+                  type="tel" 
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  placeholder={language === 'ar' ? 'رقم الهاتف' : 'Phone Number'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'البريد الإلكتروني' : 'Email'}
+                </label>
+                <input 
+                  type="email" 
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  placeholder={language === 'ar' ? 'البريد الإلكتروني' : 'Email'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" 
+                />
+              </div>
               
               <div className="col-span-2 border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
                 <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
@@ -276,19 +361,39 @@ export default function EmployeesSection({ language }) {
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <label className="flex items-center gap-2 text-sm">
-                    <input type="checkbox" className="rounded" />
+                    <input 
+                      type="checkbox" 
+                      checked={formData.permissions.includes('view_reports')}
+                      onChange={() => togglePermission('view_reports')}
+                      className="rounded" 
+                    />
                     <span className="text-gray-700 dark:text-gray-300">{language === 'ar' ? 'عرض التقارير' : 'View Reports'}</span>
                   </label>
                   <label className="flex items-center gap-2 text-sm">
-                    <input type="checkbox" className="rounded" />
+                    <input 
+                      type="checkbox" 
+                      checked={formData.permissions.includes('manage_bookings')}
+                      onChange={() => togglePermission('manage_bookings')}
+                      className="rounded" 
+                    />
                     <span className="text-gray-700 dark:text-gray-300">{language === 'ar' ? 'إدارة الحجوزات' : 'Manage Bookings'}</span>
                   </label>
                   <label className="flex items-center gap-2 text-sm">
-                    <input type="checkbox" className="rounded" />
+                    <input 
+                      type="checkbox" 
+                      checked={formData.permissions.includes('manage_finance')}
+                      onChange={() => togglePermission('manage_finance')}
+                      className="rounded" 
+                    />
                     <span className="text-gray-700 dark:text-gray-300">{language === 'ar' ? 'إدارة المالية' : 'Manage Finance'}</span>
                   </label>
                   <label className="flex items-center gap-2 text-sm">
-                    <input type="checkbox" className="rounded" />
+                    <input 
+                      type="checkbox" 
+                      checked={formData.permissions.includes('manage_rooms')}
+                      onChange={() => togglePermission('manage_rooms')}
+                      className="rounded" 
+                    />
                     <span className="text-gray-700 dark:text-gray-300">{language === 'ar' ? 'إدارة الغرف' : 'Manage Rooms'}</span>
                   </label>
                 </div>
@@ -298,7 +403,7 @@ export default function EmployeesSection({ language }) {
               <button onClick={() => setShowAddModal(false)} className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
                 {language === 'ar' ? 'إلغاء' : 'Cancel'}
               </button>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
+              <button onClick={handleAddEmployee} className="px-6 py-3 bg-blue-600 text-white rounded-lg">
                 {language === 'ar' ? 'حفظ' : 'Save'}
               </button>
             </div>
