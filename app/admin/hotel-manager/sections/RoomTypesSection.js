@@ -93,6 +93,26 @@ export default function RoomTypesSection({ language }) {
     setFormData({ nameAr: '', nameEn: '', capacity: '', basePrice: '', description: '' })
   }
 
+  const handleAddRoomType = () => {
+    if (!formData.nameAr || !formData.nameEn || !formData.capacity || !formData.basePrice || !formData.description) {
+      alert(language === 'ar' ? 'الرجاء ملء جميع الحقول' : 'Please fill all fields')
+      return
+    }
+
+    const newRoomType = {
+      id: roomTypes.length > 0 ? Math.max(...roomTypes.map(rt => rt.id)) + 1 : 1,
+      nameAr: formData.nameAr,
+      nameEn: formData.nameEn,
+      capacity: parseInt(formData.capacity),
+      basePrice: parseInt(formData.basePrice),
+      description: formData.description
+    }
+
+    setRoomTypes([...roomTypes, newRoomType])
+    setShowAddModal(false)
+    setFormData({ nameAr: '', nameEn: '', capacity: '', basePrice: '', description: '' })
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -163,17 +183,82 @@ export default function RoomTypesSection({ language }) {
               {language === 'ar' ? 'إضافة نوع غرفة' : 'Add Room Type'}
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <input type="text" placeholder={language === 'ar' ? 'اسم النوع (عربي)' : 'Type Name (Arabic)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="text" placeholder={language === 'ar' ? 'اسم النوع (إنجليزي)' : 'Type Name (English)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="number" placeholder={language === 'ar' ? 'السعة (عدد الأشخاص)' : 'Capacity (persons)'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <input type="number" placeholder={language === 'ar' ? 'السعر الأساسي' : 'Base Price'} className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white" />
-              <textarea placeholder={language === 'ar' ? 'الوصف' : 'Description'} rows="3" className="col-span-2 w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم النوع (عربي)' : 'Type Name (Arabic)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameAr}
+                  onChange={(e) => setFormData({...formData, nameAr: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم النوع (عربي)' : 'Type Name (Arabic)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'اسم النوع (إنجليزي)' : 'Type Name (English)'}
+                </label>
+                <input 
+                  type="text" 
+                  value={formData.nameEn}
+                  onChange={(e) => setFormData({...formData, nameEn: e.target.value})}
+                  placeholder={language === 'ar' ? 'اسم النوع (إنجليزي)' : 'Type Name (English)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'السعة (عدد الأشخاص)' : 'Capacity (persons)'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.capacity}
+                  onChange={(e) => setFormData({...formData, capacity: e.target.value})}
+                  placeholder={language === 'ar' ? 'السعة (عدد الأشخاص)' : 'Capacity (persons)'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500" 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'السعر الأساسي' : 'Base Price'}
+                </label>
+                <input 
+                  type="number" 
+                  value={formData.basePrice}
+                  onChange={(e) => setFormData({...formData, basePrice: e.target.value})}
+                  placeholder={language === 'ar' ? 'السعر الأساسي' : 'Base Price'} 
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500" 
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  {language === 'ar' ? 'الوصف' : 'Description'}
+                </label>
+                <textarea 
+                  rows="3"
+                  value={formData.description}
+                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  placeholder={language === 'ar' ? 'الوصف' : 'Description'} 
+                  className="col-span-2 w-full px-4 py-3 border rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500"
+                ></textarea>
+              </div>
             </div>
             <div className="flex justify-end gap-3 mt-6">
-              <button onClick={() => setShowAddModal(false)} className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg">
+              <button 
+                onClick={() => {
+                  setShowAddModal(false)
+                  setFormData({ nameAr: '', nameEn: '', capacity: '', basePrice: '', description: '' })
+                }} 
+                className="px-6 py-3 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              >
                 {language === 'ar' ? 'إلغاء' : 'Cancel'}
               </button>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg">
+              <button 
+                onClick={handleAddRoomType}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              >
+                <i className="fas fa-save"></i>
                 {language === 'ar' ? 'حفظ' : 'Save'}
               </button>
             </div>
